@@ -1,0 +1,205 @@
+MongoDB зберігає дані в beSon-ах
+
+
+use somebase - створення бази данних
+
+cls - очистити консольку
+
+db.somebase.isert(
+
+{"name": 'Viktor, "age": 23} - Тиаким чином ми вносимо дані в базу даних монго
+
+)
+
+db.person.find() - таким методом ми гетаєм дані з бази
+
+db.person.find().pretty() - таким методом ми красиво гктаэм дані з таблиці
+
+db.person.find({"age": 23}).pretty() - знайти юзера який маэ вік 23 
+
+db.person.find({"car": "zaz"}).pretty() - так можна знайти юзера який має машину заз але яка внесена в масив
+
+db.person.find({"bestFriend.age": "15"}).pretty() - через крапочку доступаємся у вложеності обєктів
+
+
+Агрегатні функції
+
+
+$gte - greater than equals - більше рівне
+
+$gt - greater than - більше ніж
+
+$lte - less than equals - менше рівне
+
+$lt - less than - менше ніж
+
+$ne - not equals - не рівне
+
+$e - equals
+
+
+Шукаєм юзерів в яких вік більше рівний 30
+db.person.find({
+	
+	"age": {
+
+	  $gte: 30
+	}
+}).pretty()
+
+
+Шукаєм тільки нейм і ейдж юзера з віком 30 і більше
+db.person.find({
+	
+	"age": {
+
+	  $gte: 30
+	}
+
+
+},{
+	"name": true, 
+	"age": true
+}).pretty()
+
+
+Якщо вписати "_id": false то айдішку не вийде вставити.
+db.person.find({
+	
+	"age": {
+
+	  $gte: 30
+	}
+
+
+},{
+	"name": true, 
+	"age": true,
+	"_id": false
+}).pretty()
+
+
+
+АБО
+
+db.person.find({
+	
+	$or: [
+
+		{"age": {
+
+			$gte: 20
+			
+		},
+
+		{"age": {
+			
+			$lte: 20
+			}
+		}
+	}
+
+]
+
+
+
+
+
+}).pretty()
+
+
+
+
+СОРТУВАННЯ
+
+ASC  
+
+db.person.find().sort({"age": 1}).pretty()
+
+DESC
+
+db.person.find().sort({"age": -1}).pretty()
+
+
+UPDATE
+
+db.person.update(
+
+	обэкт пошуку
+	{  
+		"age": 50
+	},
+	обєкт шо на шо ми змінюєм
+	{
+		$set: {
+			"car": true
+		}	
+	},
+	Обєкт налаштувань
+	{
+		"multi" : true - цим ми заставиим обновити всі обєкти які підпапдають під ці значення
+	}
+
+
+)
+
+
+АГРЕГАЦІЯ
+
+db.person.aggregate([
+Ланцюжок агрегацій	
+	{
+		$match: {
+			"age": 23
+		}
+	},
+	{
+		$sort: {
+			"bestFriend.age" 
+		}
+	},
+	{
+		$group: {
+			"_id": "$age" - групування
+		}	"count": {
+				$sum: 1 - порахуэ юзерів за віком
+			}
+	}
+])
+
+
+
+
+
+db.person.remove({"car": true})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
